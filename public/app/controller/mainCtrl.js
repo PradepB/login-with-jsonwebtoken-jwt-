@@ -1,13 +1,25 @@
 angular.module("mainController",['authServices'])
-.controller("mainCtrl",function(Auth, $timeout,   $location ){
+.controller("mainCtrl",function(Auth, $timeout, $location, $rootScope ){
  var app=this;
    
+$rootScope.$on('$routeChangeStart',function(){
 
 if(Auth.isLoggedIn()){
     console.log("success to login");
+    app.isLoggedIn=true;
+    Auth.getUser().then(function(data){
+        console.log(data.data.username);///its provided username..if u remove data.username it provide toke value
+        app.username=data.data.username;
+    })
 }else{
     console.log("error in login");
+    app.isLoggedIn=false;
+    app.username="";
+
 }
+
+});
+
 
 
    this. doLogin=function(loginData){
@@ -22,6 +34,8 @@ if(Auth.isLoggedIn()){
                 app.successMsg=data.data.message;
                 $timeout(function(){
                     $location.path('/about');
+                    app.loginData="";
+                    app.successMsg=false;
                 },2000);
                 
             }else{

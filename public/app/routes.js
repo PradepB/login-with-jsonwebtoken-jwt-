@@ -22,7 +22,7 @@ angular.module("appRoutes",['ngRoute'])
         templateUrl:'app/views/pages/users/logout.html'
     })
     .otherwise({redirectTo:'/'})
-    $locationProvider.html5Mode({
+  $locationProvider.html5Mode({
   enabled: true,
   requireBase: false
 });

@@ -3,10 +3,6 @@ var jwt = require('jsonwebtoken');
 var secret = 'pradep';
 
 
-
-
-
-
 module.exports=function(router){
     router.post('/users',function(req,res){
           var user=new User();
@@ -51,8 +47,35 @@ router.post('/authenticate',function(req,res){
         }
     });
 });
+
+
+router.use(function(req,res,next){
+    var token=req.body.token || req.body.query || req.headers['x-access-token'];
+    if(token){
+        jwt.verify(token,secret,function(err,decoded){
+            if(err) {
+                res.json({success:false,message:'error in token'});
+            }else{
+                req.decoded=decoded;
+                next();
+            }
+        })
+    }else{
+        res.json({success:false,message:'no token'})
+    }
+})
+
+
+router.post('/me',function(req,res){
+   res.send(req.decoded);
+})
+
+
 return router;
+
+
 }
+
 
 
 
